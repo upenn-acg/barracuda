@@ -1,0 +1,80 @@
+.reg .pred %aelog_p<7>;
+.reg .b32 %aelog_r<32>;
+.reg .b64 %aelog_rd<16>;
+
+
+ld.param.u64 %aelog_rd4, [_Z6ae_logyPy_param_0];
+ld.param.u64 %aelog_rd5, [_Z6ae_logyPy_param_1];
+mov.u32 %aelog_r10, 1;
+
+{
+.reg .pred %aelog_p1;
+setp.ne.u32 %aelog_p1, %aelog_r10, 0;
+vote.ballot.b32 %aelog_r9, %aelog_p1;
+}
+
+neg.s32 %aelog_r12, %aelog_r9;
+and.b32 %aelog_r13, %aelog_r9, %aelog_r12;
+clz.b32 %aelog_r14, %aelog_r13;
+mov.u32 %aelog_r15, 31;
+sub.s32 %aelog_r2, %aelog_r15, %aelog_r14;
+mov.u32 %aelog_r16, %tid.x;
+and.b32 %aelog_r3, %aelog_r16, 31;
+ld.global.u32 %aelog_r4, [pcbuffer_size];
+mov.u32 %aelog_r31, 0;
+setp.ne.s32 %aelog_p1, %aelog_r2, %aelog_r3;
+@%aelog_p1 bra ABB10_3;
+
+ld.global.u64 %aelog_rd6, [pcheader];
+add.s64 %aelog_rd1, %aelog_rd6, 8;
+add.s64 %aelog_rd7, %aelog_rd6, 4;
+atom.add.u32 %aelog_r31, [%aelog_rd7], 1;
+ld.volatile.u32 %aelog_r17, [%aelog_rd6+8];
+sub.s32 %aelog_r18, %aelog_r31, %aelog_r17;
+setp.lt.u32 %aelog_p2, %aelog_r18, %aelog_r4;
+@%aelog_p2 bra ABB10_3;
+
+ABB10_2:
+membar.gl;
+ld.volatile.u32 %aelog_r19, [%aelog_rd1];
+sub.s32 %aelog_r20, %aelog_r31, %aelog_r19;
+setp.ge.u32 %aelog_p3, %aelog_r20, %aelog_r4;
+@%aelog_p3 bra ABB10_2;
+
+ABB10_3:
+
+shfl.idx.b32 %aelog_r21, %aelog_r31, %aelog_r2, %aelog_r15;
+
+rem.s32 %aelog_r25, %aelog_r21, %aelog_r4;
+cvt.s64.s32 %aelog_rd2, %aelog_r25;
+ld.global.u64 %aelog_rd3, [pcstart];
+mul.wide.s32 %aelog_rd8, %aelog_r25, 320;
+add.s64 %aelog_rd9, %aelog_rd3, %aelog_rd8;
+mul.wide.u32 %aelog_rd10, %aelog_r3, 8;
+add.s64 %aelog_rd11, %aelog_rd9, %aelog_rd10;
+st.u64 [%aelog_rd11+16], %aelog_rd5;
+@%aelog_p1 bra ABB10_6;
+
+mul.lo.s64 %aelog_rd12, %aelog_rd2, 320;
+add.s64 %aelog_rd13, %aelog_rd3, %aelog_rd12;
+cvt.u32.u64 %aelog_r26, %aelog_rd4;
+st.v2.u32 [%aelog_rd13], {%aelog_r26, %aelog_r9};
+mov.u32 %aelog_r27, 3;
+st.u32 [%aelog_rd13+8], %aelog_r27;
+ld.global.u64 %aelog_rd14, [pcheader];
+add.s32 %aelog_r8, %aelog_r21, 1;
+atom.cas.b32 %aelog_r28, [%aelog_rd14], %aelog_r21, %aelog_r8;
+setp.eq.s32 %aelog_p5, %aelog_r28, %aelog_r21;
+@%aelog_p5 bra ABB10_6;
+
+ABB10_5:
+membar.gl;
+ld.global.u64 %aelog_rd15, [pcheader];
+add.s32 %aelog_r30, %aelog_r21, 1;
+atom.cas.b32 %aelog_r29, [%aelog_rd15], %aelog_r21, %aelog_r30;
+setp.ne.s32 %aelog_p6, %aelog_r29, %aelog_r21;
+@%aelog_p6 bra ABB10_5;
+
+ABB10_6:
+membar.sys;
+

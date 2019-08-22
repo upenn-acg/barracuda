@@ -1,0 +1,2 @@
+LD_PRELOAD=$HOOKLIB ./hashtable -noprompt -numThreads=8 -numBlocks=8 -quiet
+

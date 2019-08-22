@@ -1,0 +1,1 @@
+LD_PRELOAD=$HOOKLIB ./needle 2048 10

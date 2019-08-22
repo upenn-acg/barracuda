@@ -1,0 +1,232 @@
+
+
+
+
+
+
+.version 4.1
+.target sm_30
+.address_size 64
+
+.global .align 4 .u32 slim_qnum;
+.global .align 8 .u64 slim_qheader;
+.global .align 8 .u64 slim_qbuffer_size;
+.global .align 8 .u64 slim_shadow_base;
+
+.visible .func slim_store_op(
+.param .b64 slim_store_op_param_0,
+.param .b64 slim_store_op_param_1,
+.param .b32 slim_store_op_param_2
+)
+{
+.reg .pred %p<7>;
+.reg .b16 %rs<2>;
+.reg .b32 %r<36>;
+.reg .b64 %rd<21>;
+
+
+ld.param.u64 %rd7, [slim_store_op_param_0];
+ld.param.u64 %rd8, [slim_store_op_param_1];
+ld.param.u8 %rs1, [slim_store_op_param_2];
+mov.u32 %r10, 1;
+
+	{ 
+.reg .pred %p1; 
+setp.ne.u32 %p1, %r10, 0; 
+vote.ballot.b32 %r9, %p1; 
+}
+
+	mov.u32 %r12, %tid.x;
+and.b32 %r2, %r12, 31;
+neg.s32 %r13, %r9;
+and.b32 %r14, %r9, %r13;
+clz.b32 %r15, %r14;
+mov.u32 %r16, 31;
+sub.s32 %r3, %r16, %r15;
+mov.u32 %r17, %ctaid.x;
+ld.global.u32 %r18, [slim_qnum];
+add.s32 %r19, %r17, %r18;
+add.s32 %r20, %r19, -1;
+rem.u32 %r21, %r20, %r18;
+ld.global.u64 %rd9, [slim_qbuffer_size];
+cvt.u32.u64	%r4, %rd9;
+cvt.s64.s32	%rd10, %r21;
+mul.lo.s64 %rd11, %rd9, 320;
+add.s64 %rd12, %rd11, 64;
+mul.lo.s64 %rd1, %rd12, %rd10;
+ld.global.u64 %rd2, [slim_qheader];
+mov.u32 %r35, 0;
+setp.ne.s32	%p1, %r3, %r2;
+@%p1 bra BB0_3;
+
+add.s64 %rd13, %rd1, %rd2;
+add.s64 %rd3, %rd13, 8;
+add.s64 %rd14, %rd13, 4;
+atom.add.u32 %r35, [%rd14], 1;
+ld.volatile.u32 %r22, [%rd13+8];
+sub.s32 %r23, %r35, %r22;
+setp.lt.u32	%p2, %r23, %r4;
+@%p2 bra BB0_3;
+
+BB0_2:
+membar.sys;
+ld.volatile.u32 %r24, [%rd3];
+sub.s32 %r25, %r35, %r24;
+setp.ge.u32	%p3, %r25, %r4;
+@%p3 bra BB0_2;
+
+BB0_3:
+add.s64 %rd4, %rd2, %rd1;
+add.s64 %rd5, %rd4, 64;
+
+shfl.idx.b32 %r26, %r35, %r3, %r16;
+
+rem.s32 %r30, %r26, %r4;
+cvt.s64.s32	%rd6, %r30;
+mul.wide.s32 %rd15, %r30, 320;
+add.s64 %rd16, %rd5, %rd15;
+mul.wide.u32 %rd17, %r2, 8;
+add.s64 %rd18, %rd16, %rd17;
+st.u64 [%rd18+16], %rd8;
+@%p1 bra BB0_6;
+
+mul.lo.s64 %rd19, %rd6, 320;
+add.s64 %rd20, %rd5, %rd19;
+st.u64 [%rd20], %rd7;
+cvt.u32.u16	%r31, %rs1;
+st.v2.u32 [%rd20+8], {%r9, %r31};
+add.s32 %r8, %r26, 1;
+atom.cas.b32 %r32, [%rd4], %r26, %r8;
+setp.eq.s32	%p5, %r32, %r26;
+@%p5 bra BB0_6;
+
+BB0_5:
+membar.sys;
+add.s32 %r34, %r26, 1;
+atom.cas.b32 %r33, [%rd4], %r26, %r34;
+setp.ne.s32	%p6, %r33, %r26;
+@%p6 bra BB0_5;
+
+BB0_6:
+ret;
+}
+
+
+.visible .entry _autogen_cb_devinit(
+.param .u32 autogen_cb_devinit_param_0,
+.param .u64 autogen_cb_devinit_param_1,
+.param .u64 autogen_cb_devinit_param_2
+)
+{
+.reg .pred %p<3>;
+.reg .s32 %r<8>;
+.reg .s64 %rd<24>;
+
+
+ld.param.u32 %r3, [autogen_cb_devinit_param_0];
+ld.param.u64 %rd23, [autogen_cb_devinit_param_1];
+ld.param.u64 %rd9, [autogen_cb_devinit_param_2];
+st.global.u64 [slim_shadow_base], %rd23;
+shl.b32 %r4, %r3, 6;
+cvt.s64.s32	%rd10, %r4;
+not.b64 %rd11, %rd10;
+add.s64 %rd12, %rd11, %rd9;
+mul.hi.u64 %rd13, %rd12, -3689348814741910323;
+shr.u64 %rd14, %rd13, 8;
+cvt.s64.s32	%rd15, %r3;
+div.u64 %rd22, %rd14, %rd15;
+st.global.u64 [slim_qbuffer_size], %rd22;
+st.global.u32 [slim_qnum], %r3;
+st.global.u64 [slim_qheader], %rd23;
+setp.lt.s32	%p1, %r3, 1;
+@%p1 bra BB1_3;
+
+mov.u64 %rd21, 0;
+mov.u32 %r7, 1;
+
+BB1_2:
+mov.u64 %rd4, %rd23;
+mov.u64 %rd3, %rd22;
+mul.lo.s64 %rd17, %rd3, 320;
+add.s64 %rd18, %rd17, 64;
+mul.lo.s64 %rd19, %rd18, %rd21;
+add.s64 %rd20, %rd4, %rd19;
+mov.u32 %r6, 0;
+st.u32 [%rd20], %r6;
+st.u32 [%rd20+4], %r6;
+st.u32 [%rd20+8], %r6;
+setp.lt.s32	%p2, %r7, %r3;
+@%p2 bra BB1_4;
+
+BB1_3:
+membar.sys;
+ret;
+
+BB1_4:
+ld.global.u64 %rd23, [slim_qheader];
+ld.global.u64 %rd22, [slim_qbuffer_size];
+add.s64 %rd21, %rd21, 1;
+add.s32 %r7, %r7, 1;
+bra.uni BB1_2;
+}
+
+
+
+.visible .entry _Z6tstfunPVj(
+.param .u64 _Z6tstfunPVj_param_0
+)
+{
+.reg .s32 %r<11>;
+.reg .s64 %rd<5>;
+.reg .b32 %aetid_r<16>;
+.reg .b64 %aetid_rd<9>;
+
+ld.param.u32 %aetid_rd3, [_Z6tstfunPVj_param_0]; // XXX - stream ID
+mov.u64 %aetid_rd3, 0; // XXX - hardcode stream id 0
+shl.b64 %aetid_rd4, %aetid_rd3, 48;
+mov.u32 %aetid_r1, %ctaid.x;
+mov.u32 %aetid_r2, %ctaid.y;
+mov.u32 %aetid_r3, %nctaid.x;
+mov.u32 %aetid_r4, %nctaid.y;
+mov.u32 %aetid_r5, %ctaid.z;
+mad.lo.s32 %aetid_r6, %aetid_r5, %aetid_r4, %aetid_r2;
+mad.lo.s32 %aetid_r7, %aetid_r6, %aetid_r3, %aetid_r1;
+mul.wide.u32 %aetid_rd5, %aetid_r7, 65536;
+or.b64 %aetid_rd6, %aetid_rd5, %aetid_rd4;
+mov.u32 %aetid_r8, %tid.z;
+mov.u32 %aetid_r9, %ntid.x;
+mov.u32 %aetid_r10, %ntid.y;
+mov.u32 %aetid_r11, %tid.y;
+mov.u32 %aetid_r12, %tid.x;
+mad.lo.s32 %aetid_r13, %aetid_r10, %aetid_r8, %aetid_r11;
+mad.lo.s32 %aetid_r14, %aetid_r13, %aetid_r9, %aetid_r12;
+shr.u32 %aetid_r15, %aetid_r14, 5;
+cvt.u64.u32 %aetid_rd7, %aetid_r15;
+or.b64 %aetid_rd8, %aetid_rd6, %aetid_rd7;
+//st.volatile.global.u64 [%aetid_rd2], %aetid_rd8; - store aetid_rd8 as tid
+
+
+ld.param.u64 %rd1, [_Z6tstfunPVj_param_0];
+cvta.to.global.u64 %rd2, %rd1;
+mov.u32 %r1, %ntid.x;
+mov.u32 %r2, %ctaid.x;
+mov.u32 %r3, %tid.x;
+mad.lo.s32 %r4, %r2, %r1, %r3;
+mul.wide.s32 %rd3, %r4, 4;
+add.s64 %rd4, %rd2, %rd3;
+ld.volatile.global.u32 %r5, [%rd4];
+add.s32 %r6, %r5, 8;
+st.volatile.global.u32 [%rd4], %r6;
+call.uni slim_store_op, (%aetid_rd8, %rd4, 3);
+ld.volatile.global.u32 %r7, [%rd4];
+add.s32 %r8, %r7, 8;
+st.volatile.global.u32 [%rd4], %r8;
+call.uni slim_store_op, (%aetid_rd8, %rd4, 3);
+ld.volatile.global.u32 %r9, [%rd4];
+add.s32 %r10, %r9, 8;
+st.volatile.global.u32 [%rd4], %r10;
+call.uni slim_store_op, (%aetid_rd8, %rd4, 3);
+ret;
+}
+
+

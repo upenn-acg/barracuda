@@ -1,0 +1,1 @@
+cuda-memcheck --tool racecheck ./kmeans_linfo -i data/kdd_cup  > kmeans.racecheck

@@ -1,0 +1,1 @@
+LD_PRELOAD=$HOOKLIB ./kmeans -i data/kdd_cup 

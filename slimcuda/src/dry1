@@ -1,0 +1,35 @@
+_SPACE_= 
+_CUDART_=cudart
+_HERE_=/opt/nvidia/cuda/bin
+_THERE_=/opt/nvidia/cuda/bin
+_TARGET_SIZE_=
+_TARGET_DIR_=
+_TARGET_SIZE_=64
+TOP=/opt/nvidia/cuda/bin/..
+NVVMIR_LIBRARY_DIR=/opt/nvidia/cuda/bin/../nvvm/libdevice
+LD_LIBRARY_PATH=/opt/nvidia/cuda/bin/../lib:
+PATH=/opt/nvidia/cuda/bin/../open64/bin:/opt/nvidia/cuda/bin/../nvvm/bin:/opt/nvidia/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/nvidia/cuda/bin
+INCLUDES="-I/opt/nvidia/cuda/bin/..//include"  
+LIBRARIES=\""-L/opt/nvidia/cuda/bin/..//lib64/stubs" "-L/opt/nvidia/cuda/bin/..//lib64"\"
+CUDAFE_FLAGS=
+PTXAS_FLAGS=
+gcc -D__CUDA_ARCH__=300 -E -x c++       -DCUDA_DOUBLE_MATH_FUNCTIONS  -D__CUDACC__ -D__NVCC__  -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -D"__CUDACC_VER__=70517" -D"__CUDACC_VER_BUILD__=17" -D"__CUDACC_VER_MINOR__=5" -D"__CUDACC_VER_MAJOR__=7" -include "cuda_runtime.h" -m64 -g -gdwarf-2 "tst1_basic_works.cu" > "/tmp/tmpxft_00007464_00000000-9_tst1_basic_works.cpp1.ii" 
+cudafe --allow_managed --m64 --gnu_version=40903 -tused --no_remove_unneeded_entities  --gen_c_file_name "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.c" --stub_file_name "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.stub.c" --gen_device_file_name "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.gpu" --nv_arch "compute_30" --gen_module_id_file --module_id_file_name "/tmp/tmpxft_00007464_00000000-3_tst1_basic_works.module_id" --include_file_name "tmpxft_00007464_00000000-2_tst1_basic_works.fatbin.c" "/tmp/tmpxft_00007464_00000000-9_tst1_basic_works.cpp1.ii" 
+gcc -D__CUDA_ARCH__=300 -E -x c       -DCUDA_DOUBLE_MATH_FUNCTIONS  -D__CUDACC__ -D__NVCC__ -D__CUDANVVM__  -D__CUDA_PREC_DIV -D__CUDA_PREC_SQRT -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -m64 -g -gdwarf-2 "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.gpu" > "/tmp/tmpxft_00007464_00000000-10_tst1_basic_works.cpp2.i" 
+cudafe -w --allow_managed --m64 --gnu_version=40903 --c  --gen_c_file_name "/tmp/tmpxft_00007464_00000000-11_tst1_basic_works.cudafe2.c" --stub_file_name "/tmp/tmpxft_00007464_00000000-11_tst1_basic_works.cudafe2.stub.c" --gen_device_file_name "/tmp/tmpxft_00007464_00000000-11_tst1_basic_works.cudafe2.gpu" --nv_arch "compute_30" --module_id_file_name "/tmp/tmpxft_00007464_00000000-3_tst1_basic_works.module_id" --include_file_name "tmpxft_00007464_00000000-2_tst1_basic_works.fatbin.c" "/tmp/tmpxft_00007464_00000000-10_tst1_basic_works.cpp2.i" 
+gcc -D__CUDA_ARCH__=300 -E -x c       -DCUDA_DOUBLE_MATH_FUNCTIONS  -D__CUDABE__ -D__CUDANVVM__  -D__CUDA_PREC_DIV -D__CUDA_PREC_SQRT -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -m64 -g -gdwarf-2 "/tmp/tmpxft_00007464_00000000-11_tst1_basic_works.cudafe2.gpu" > "/tmp/tmpxft_00007464_00000000-12_tst1_basic_works.cpp3.i" 
+filehash -s " " "/tmp/tmpxft_00007464_00000000-12_tst1_basic_works.cpp3.i" > "/tmp/tmpxft_00007464_00000000-13_tst1_basic_works.hash"
+gcc -E -x c++ -D__CUDACC__ -D__NVCC__  -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -D"__CUDACC_VER__=70517" -D"__CUDACC_VER_BUILD__=17" -D"__CUDACC_VER_MINOR__=5" -D"__CUDACC_VER_MAJOR__=7" -include "cuda_runtime.h" -m64 -g -gdwarf-2 "tst1_basic_works.cu" > "/tmp/tmpxft_00007464_00000000-5_tst1_basic_works.cpp4.ii" 
+cudafe++ --allow_managed --m64 --gnu_version=40903 --parse_templates  --gen_c_file_name "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.cpp" --stub_file_name "tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.stub.c" --module_id_file_name "/tmp/tmpxft_00007464_00000000-3_tst1_basic_works.module_id" "/tmp/tmpxft_00007464_00000000-5_tst1_basic_works.cpp4.ii" 
+cicc  -arch compute_30 -m64 -ftz=0 -prec_div=1 -prec_sqrt=1 -fmad=1 -nvvmir-library "/opt/nvidia/cuda/bin/../nvvm/libdevice/libdevice.compute_30.10.bc" --orig_src_file_name "tst1_basic_works.cu"  "/tmp/tmpxft_00007464_00000000-12_tst1_basic_works.cpp3.i" -o "/tmp/tmpxft_00007464_00000000-6_tst1_basic_works.src.ptx"
+./test_ptx_instrumentation "/tmp/tmpxft_00007464_00000000-6_tst1_basic_works.src.ptx" > "/tmp/tmpxft_00007464_00000000-6_tst1_basic_works.ptx"
+ptxas  -g -lineinfo -arch=sm_30 -m64  "/tmp/tmpxft_00007464_00000000-6_tst1_basic_works.ptx"  -o "/tmp/tmpxft_00007464_00000000-15_tst1_basic_works.sm_30.cubin" 
+fatbinary --create="/tmp/tmpxft_00007464_00000000-2_tst1_basic_works.fatbin" -64 --key="xxxxxxxxxx" "--image=profile=sm_30,file=/tmp/tmpxft_00007464_00000000-15_tst1_basic_works.sm_30.cubin" "--image=profile=compute_30,file=/tmp/tmpxft_00007464_00000000-6_tst1_basic_works.ptx" --embedded-fatbin="/tmp/tmpxft_00007464_00000000-2_tst1_basic_works.fatbin.c" --cuda
+rm /tmp/tmpxft_00007464_00000000-2_tst1_basic_works.fatbin
+gcc -D__CUDA_ARCH__=300 -E -x c++       -DCUDA_DOUBLE_MATH_FUNCTIONS   -D__CUDA_PREC_DIV -D__CUDA_PREC_SQRT -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -m64 -g -gdwarf-2 "/tmp/tmpxft_00007464_00000000-4_tst1_basic_works.cudafe1.cpp" > "/tmp/tmpxft_00007464_00000000-16_tst1_basic_works.ii" 
+gcc -c -x c++ -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -fpreprocessed -m64 -g -gdwarf-2 -o "/tmp/tmpxft_00007464_00000000-17_tst1_basic_works.o" "/tmp/tmpxft_00007464_00000000-16_tst1_basic_works.ii" 
+nvlink --arch=sm_30 --register-link-binaries="/tmp/tmpxft_00007464_00000000-7_tst1_basic_works_dlink.reg.c" -m64   "-L/opt/nvidia/cuda/bin/..//lib64/stubs" "-L/opt/nvidia/cuda/bin/..//lib64" -cpu-arch=X86_64 "/tmp/tmpxft_00007464_00000000-17_tst1_basic_works.o"  -o "/tmp/tmpxft_00007464_00000000-18_tst1_basic_works_dlink.sm_30.cubin"
+fatbinary --create="/tmp/tmpxft_00007464_00000000-8_tst1_basic_works_dlink.fatbin" -64 --key="tst1_basic_works_dlink" -link "--image=profile=sm_30,file=/tmp/tmpxft_00007464_00000000-18_tst1_basic_works_dlink.sm_30.cubin" --embedded-fatbin="/tmp/tmpxft_00007464_00000000-8_tst1_basic_works_dlink.fatbin.c" 
+rm /tmp/tmpxft_00007464_00000000-8_tst1_basic_works_dlink.fatbin
+gcc -c -x c++ -DFATBINFILE="\"/tmp/tmpxft_00007464_00000000-8_tst1_basic_works_dlink.fatbin.c\"" -DREGISTERLINKBINARYFILE="\"/tmp/tmpxft_00007464_00000000-7_tst1_basic_works_dlink.reg.c\"" -I. -I"/opt/nvidia/cuda/samples/common/inc" "-I/opt/nvidia/cuda/bin/..//include"   -D"__CUDACC_VER__=70517" -D"__CUDACC_VER_BUILD__=17" -D"__CUDACC_VER_MINOR__=5" -D"__CUDACC_VER_MAJOR__=7" -m64 -g -gdwarf-2 -o "/tmp/tmpxft_00007464_00000000-19_tst1_basic_works_dlink.o" "/opt/nvidia/cuda/bin/crt/link.stub" 
+g++ -m64 -g -gdwarf-2 -o "tst1_basic_works" -Wl,--start-group "/tmp/tmpxft_00007464_00000000-19_tst1_basic_works_dlink.o" "/tmp/tmpxft_00007464_00000000-17_tst1_basic_works.o"   "-L/opt/nvidia/cuda/bin/..//lib64/stubs" "-L/opt/nvidia/cuda/bin/..//lib64" -lcudadevrt  -lcudart  -Wl,--end-group 

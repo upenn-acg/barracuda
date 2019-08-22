@@ -1,0 +1,3 @@
+ptxas --gpu-name sm_35 tst_ins.ptx
+cp tst_ins.ptx tst.ptx
+

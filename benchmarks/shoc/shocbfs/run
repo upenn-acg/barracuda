@@ -1,0 +1,1 @@
+LD_PRELOAD=$HOOKLIB ./shoc_bfs

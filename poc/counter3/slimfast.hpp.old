@@ -1,0 +1,66 @@
+#pragma once
+
+#include <map>
+
+class SlimFast
+{
+public:
+    static inline SlimFast& instance()
+    {
+        static SlimFast inst;
+        return inst;
+    }
+
+    static inline void process_records(PCRecord* records, int count)
+    {
+        __sync_fetch_and_add(&instance().count, 1);
+        for(int j = 0; j < WARP_SIZE; ++ j)
+        {
+             
+            if(records->active & (1 << j))
+            {
+                printf("TRACE,%lx,%08x,%i,%i,%p\n",
+                        records->tid, records->active, records->op, records->predicated, records->address[j]);
+            }
+        }
+    }
+
+    void print()
+    {
+        printf("Count: %i\n", count);
+    }
+
+    // XXX: add host side operations
+   
+    static void on_stream_created(unsigned short stream_id)
+    {
+    }
+
+    static void on_stream_destroyed(unsigned short stream_id)
+    {
+    }
+
+    static void on_kernel_launched(unsigned short stream_id, dim3 grid_dim)
+    {
+    }
+
+    static void on_kernel_done(unsigned short stream_id)
+    {
+    }
+
+
+private:
+    typedef uint64_t tid_t;
+    typedef uint64_t blk_t;
+    typedef void (SlimFast::*handler_t)(tid_t tid, const void* address);
+
+    SlimFast()
+    {
+    }
+
+    ~SlimFast()
+    {
+    }
+
+    int count;    
+};

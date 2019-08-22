@@ -1,0 +1,1 @@
+LD_PRELOAD=$HOOKLIB ./bfs data/graph1MW_6.txt

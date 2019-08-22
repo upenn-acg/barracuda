@@ -1,0 +1,1 @@
+cuda-memcheck --tool racecheck ./pathfinder_linfo 100000 100 20  > pathfinder.racecheck

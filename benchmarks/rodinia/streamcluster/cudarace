@@ -1,0 +1,1 @@
+cuda-memcheck --tool racecheck ./streamcluster_linfo  10 20 256 65536 65536 1000 none sc_gpu_output.out 1 > streamcluster.racecheck

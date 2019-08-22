@@ -1,0 +1,2 @@
+set environment LD_PRELOAD=./libhook.so
+set environment SC_DBGLVL=4

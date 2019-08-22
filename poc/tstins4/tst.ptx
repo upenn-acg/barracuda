@@ -1,0 +1,78 @@
+
+
+
+
+
+
+
+
+.version 4.3
+.target sm_30
+.address_size 64
+
+
+.extern .func (.param .b32 func_retval0) vprintf
+(
+.param .b64 vprintf_param_0,
+.param .b64 vprintf_param_1
+)
+;
+.global .align 1 .b8 $str[15] = {42, 42, 42, 42, 82, 82, 82, 82, 42, 42, 42, 42, 42, 10, 0};
+
+.visible .entry _Z6tstfunPVj(
+.param .u64 _Z6tstfunPVj_param_0
+)
+{
+.reg .b32 %r<12>;
+.reg .b64 %rd<8>;
+
+
+ld.param.u64 %rd1, [_Z6tstfunPVj_param_0];
+.loc 1 16 1
+cvta.to.global.u64 %rd2, %rd1;
+mov.u64 %rd3, $str;
+cvta.global.u64 %rd4, %rd3;
+mov.u64 %rd5, 0;
+.loc 1 16 1
+
+	{
+.reg .b32 temp_param_reg;
+
+	.param .b64 param0;
+st.param.b64	[param0+0], %rd4;
+.param .b64 param1;
+st.param.b64	[param1+0], %rd5;
+.param .b32 retval0;
+call.uni (retval0), 
+vprintf, 
+(
+param0, 
+param1
+);
+ld.param.b32	%r1, [retval0+0];
+
+
+	}
+	.loc 1 17 1
+mov.u32 %r2, %ntid.x;
+mov.u32 %r3, %ctaid.x;
+mov.u32 %r4, %tid.x;
+mad.lo.s32 %r5, %r3, %r2, %r4;
+.loc 1 20 1
+mul.wide.s32 %rd6, %r5, 4;
+add.s64 %rd7, %rd2, %rd6;
+ld.volatile.global.u32 %r6, [%rd7];
+add.s32 %r7, %r6, 4;
+st.volatile.global.u32 [%rd7], %r7;
+ld.volatile.global.u32 %r8, [%rd7];
+add.s32 %r9, %r8, 4;
+st.volatile.global.u32 [%rd7], %r9;
+ld.volatile.global.u32 %r10, [%rd7];
+add.s32 %r11, %r10, 4;
+st.volatile.global.u32 [%rd7], %r11;
+.loc 1 22 2
+ret;
+}
+
+.file	1 "/home/arieleiz/gpu-race-detection-ae/poc/tstins4/tst1.cu", 1468270442, 1314
+

@@ -1,0 +1,6 @@
+for e in example_block_radix_sort example_block_reduce example_block_scan example_device_histogram example_device_partition_flagged example_device_partition_if example_device_radix_sort example_device_reduce example_device_scan example_device_select_flagged example_device_select_if example_device_select_unique example_device_sort_find_non_trivial_runs
+do
+    cuda-memcheck --tool racecheck ./${e}_linfo --quiet > ${e}.racecheck
+done
+
+

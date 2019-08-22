@@ -1,0 +1,1 @@
+cuda-gdb -x dbgscript ./tst2

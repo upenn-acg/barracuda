@@ -1,0 +1,40 @@
+
+
+
+
+
+
+.version 4.1
+.target sm_30
+.address_size 64
+
+
+.visible .entry _Z6tstfunPVj(
+.param .u64 _Z6tstfunPVj_param_0
+)
+{
+.reg .s32 %r<11>;
+.reg .s64 %rd<5>;
+
+
+ld.param.u64 %rd1, [_Z6tstfunPVj_param_0];
+cvta.to.global.u64 %rd2, %rd1;
+mov.u32 %r1, %ntid.x;
+mov.u32 %r2, %ctaid.x;
+mov.u32 %r3, %tid.x;
+mad.lo.s32 %r4, %r2, %r1, %r3;
+mul.wide.s32 %rd3, %r4, 4;
+add.s64 %rd4, %rd2, %rd3;
+ld.volatile.global.u32 %r5, [%rd4];
+add.s32 %r6, %r5, 8;
+st.volatile.global.u32 [%rd4], %r6;
+ld.volatile.global.u32 %r7, [%rd4];
+add.s32 %r8, %r7, 8;
+st.volatile.global.u32 [%rd4], %r8;
+ld.volatile.global.u32 %r9, [%rd4];
+add.s32 %r10, %r9, 8;
+st.volatile.global.u32 [%rd4], %r10;
+ret;
+}
+
+

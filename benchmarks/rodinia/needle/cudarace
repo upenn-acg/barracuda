@@ -1,0 +1,1 @@
+cuda-memcheck --tool racecheck ./needle_linfo 2048 10 > needle.racecheck

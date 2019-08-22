@@ -1,0 +1,2 @@
+LD_PRELOAD=$HOOKLIB ./interac
+

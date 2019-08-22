@@ -1,0 +1,2 @@
+cuda-memcheck --tool racecheck ./hashtable_linfo -noprompt -numThreads=8 -numBlocks=8 -quiet > hashtable.racecheck
+

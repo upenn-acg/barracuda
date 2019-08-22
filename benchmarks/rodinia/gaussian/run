@@ -1,0 +1,3 @@
+#!/bin/sh
+LD_PRELOAD=$HOOKLIB ./gaussian -f data/matrix1024.txt -q
+

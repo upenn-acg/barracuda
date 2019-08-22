@@ -1,0 +1,2 @@
+cuda-memcheck --tool racecheck ./interac_linfo > interac.racecheck
+

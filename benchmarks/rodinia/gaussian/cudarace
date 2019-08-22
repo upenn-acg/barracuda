@@ -1,0 +1,3 @@
+#!/bin/sh
+cuda-memcheck --tool racecheck ./gaussian_linfo -f data/matrix1024.txt -q > gaussian.racecheck
+

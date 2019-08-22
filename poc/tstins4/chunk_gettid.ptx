@@ -1,0 +1,29 @@
+.reg .b32 %aetid_r<16>;
+.reg .b64 %aetid_rd<9>;
+
+//ld.param.u64 %aetid_rd1, [_Z9aetid_gettidiPVy_param_1];
+//cvta.to.global.u64 %aetid_rd2, %aetid_rd1;
+//ld.param.u32 %aetid_rd3, [_Z9aetid_gettidiPVy_param_0]; // XXX - stream ID
+mov.u32 %aetid_rd3, 0; // XXX - hardcode stream id 0
+shl.b64 %aetid_rd4, %aetid_rd3, 48;
+mov.u32 %aetid_r1, %ctaid.x;
+mov.u32 %aetid_r2, %ctaid.y;
+mov.u32 %aetid_r3, %nctaid.x;
+mov.u32 %aetid_r4, %nctaid.y;
+mov.u32 %aetid_r5, %ctaid.z;
+mad.lo.s32 %aetid_r6, %aetid_r5, %aetid_r4, %aetid_r2;
+mad.lo.s32 %aetid_r7, %aetid_r6, %aetid_r3, %aetid_r1;
+mul.wide.u32 %aetid_rd5, %aetid_r7, 65536;
+or.b64 %aetid_rd6, %aetid_rd5, %aetid_rd4;
+mov.u32 %aetid_r8, %tid.z;
+mov.u32 %aetid_r9, %ntid.x;
+mov.u32 %aetid_r10, %ntid.y;
+mov.u32 %aetid_r11, %tid.y;
+mov.u32 %aetid_r12, %tid.x;
+mad.lo.s32 %aetid_r13, %aetid_r10, %aetid_r8, %aetid_r11;
+mad.lo.s32 %aetid_r14, %aetid_r13, %aetid_r9, %aetid_r12;
+shr.u32 %aetid_r15, %aetid_r14, 5;
+cvt.u64.u32 %aetid_rd7, %aetid_r15;
+or.b64 %aetid_rd8, %aetid_rd6, %aetid_rd7;
+//st.volatile.global.u64 [%aetid_rd2], %aetid_rd8; - store aetid_rd8 as tid
+

@@ -1,0 +1,2 @@
+cuda-memcheck --tool racecheck ./threadFenceReduction_linfo  --threads=256 --b=167772160 > threadFenceReduction.racecheck
+

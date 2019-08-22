@@ -1,0 +1,76 @@
+
+Fatbin elf code:
+================
+arch = sm_30
+code version = [1,7]
+producer = <unknown>
+host = linux
+compile_size = 64bit
+identifier = tst1.cu 
+
+Fatbin elf code:
+================
+arch = sm_30
+code version = [1,7]
+producer = cuda
+host = linux
+compile_size = 64bit
+identifier = tst1.cu
+
+Fatbin ptx code:
+================
+arch = sm_30
+code version = [4,3]
+producer = cuda
+host = linux
+compile_size = 64bit
+compressed
+identifier = tst1.cu
+ptxasOptions =  --generate-line-info 
+
+
+
+
+
+
+
+
+.version 4.3
+.target sm_30
+.address_size 64
+
+
+
+.visible .entry _Z6tstfunPVj(
+.param .u64 _Z6tstfunPVj_param_0
+)
+{
+.reg .b32 %r<11>;
+.reg .b64 %rd<5>;
+
+
+ld.param.u64 %rd1, [_Z6tstfunPVj_param_0];
+.loc 1 16 1
+cvta.to.global.u64 %rd2, %rd1;
+mov.u32 %r1, %ntid.x;
+mov.u32 %r2, %ctaid.x;
+mov.u32 %r3, %tid.x;
+mad.lo.s32 %r4, %r2, %r1, %r3;
+mul.wide.s32 %rd3, %r4, 4;
+add.s64 %rd4, %rd2, %rd3;
+.loc 1 19 1
+ld.volatile.global.u32 %r5, [%rd4];
+add.s32 %r6, %r5, 4;
+st.volatile.global.u32 [%rd4], %r6;
+ld.volatile.global.u32 %r7, [%rd4];
+add.s32 %r8, %r7, 4;
+st.volatile.global.u32 [%rd4], %r8;
+ld.volatile.global.u32 %r9, [%rd4];
+add.s32 %r10, %r9, 4;
+st.volatile.global.u32 [%rd4], %r10;
+.loc 1 21 2
+ret;
+}
+
+.file	1 "/home/arieleiz/gpu-race-detection-ae/poc/tstins4/tst1.cu", 1465839057, 1283
+
