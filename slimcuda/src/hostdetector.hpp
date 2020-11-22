@@ -435,39 +435,39 @@ private:
         if (loc->write_tid == tid && loc->write_epoch == my_epoch)
             return;
 
-        if (loc->write_epoch != 0)
+        if (!loc->is_atomic)
         {
-            if (!loc->is_atomic)
+            if (loc->write_epoch != 0)
             {
-                auto tr = ae->test_epoch(tid, loc->write_tid, loc->write_epoch);
-                if (tr != active_epoch::EARLIER)
-                    report_hazard(loc, loc_id, HAZARD_WA, tr);
+                    auto tr = ae->test_epoch(tid, loc->write_tid, loc->write_epoch);
+                    if (tr != active_epoch::EARLIER)
+                        report_hazard(loc, loc_id, HAZARD_WA, tr);
             }
-        }
 
-        if (loc->is_readshared)
-        {
-            mem_cv* cv = loc->read_cv;
-            for(auto it = cv->begin(); it != cv->end(); ++ it)
+            if (loc->is_readshared)
             {
-                if (tid != it->first)
+                mem_cv* cv = loc->read_cv;
+                for(auto it = cv->begin(); it != cv->end(); ++ it)
                 {
-                    auto tr = ae->test_epoch(tid, it->first, it-> second);
+                    if (tid != it->first)
+                    {
+                        auto tr = ae->test_epoch(tid, it->first, it-> second);
+                        if (tr != active_epoch::EARLIER)
+                            report_hazard(loc, loc_id, HAZARD_RW, tr);
+                    }
+                }
+            }
+            else
+            {
+                if (loc->read_epoch != 0 && tid != loc->read_tid)
+                {
+                    auto tr = ae->test_epoch(tid, loc->read_tid, loc->read_epoch);
                     if (tr != active_epoch::EARLIER)
                         report_hazard(loc, loc_id, HAZARD_RW, tr);
                 }
             }
-        }
-        else
-        {
-            if (loc->read_epoch != 0 && tid != loc->read_tid)
-            {
-                auto tr = ae->test_epoch(tid, loc->read_tid, loc->read_epoch);
-                if (tr != active_epoch::EARLIER)
-                    report_hazard(loc, loc_id, HAZARD_RW, tr);
-            }
-        }
 
+        }
         reset_read(loc, my_epoch, tid);
         set_write(loc, my_epoch, tid);
         loc-> is_atomic = true;
