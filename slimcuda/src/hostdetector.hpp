@@ -467,8 +467,9 @@ private:
                     report_hazard(loc, loc_id, HAZARD_RW, tr);
             }
         }
-
-        reset_read(loc, my_epoch, tid);
+        // Setting this to 0 wouldn't cause races to be missed:
+        // later R/W operations need to be ordered with the write anyways.
+        reset_read(loc, 0, tid);
         set_write(loc, my_epoch, tid);
         loc-> is_atomic = true;
     }
